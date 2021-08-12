@@ -1,5 +1,7 @@
-from flask import Flask, jsonify, make_response, redirect, request
+from flask import Flask, jsonify, redirect, request
 from flask_cors import CORS, cross_origin
+
+from db.db import *
 
 app = Flask(__name__)
 CORS(app)
@@ -20,7 +22,8 @@ def sign_up():
     req = request.get_json()
     if len(req["name"]) < 3:
         return jsonify({"error": "username input: please use atleast 6 characters"})
-    if req["name"] in memusers:
+    user = get_user_by_name(req["name"])
+    if user is not None:
         return jsonify({"error": "username input: username already exists"})
     else:
         name = req["name"]
@@ -28,10 +31,10 @@ def sign_up():
         return jsonify({"error": "use password length greater than 3"})
     else:
         password = req["password"]
-    memusers[name] = {"password": password, "bookmarks": {}}
-    resp = {}
-    resp["name"] = name
-    resp["password"] = password
+    id = add_user(name, password)
+
+    # memusers[name] = {"password": password, "bookmarks": {}}
+    resp = {"name": name, "password": password, "id": id}
     return jsonify(resp), 200
 
 
