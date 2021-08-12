@@ -89,15 +89,15 @@ def get_cmd():
 @app.route("/search/<name>/<password>/<cmd>", methods=["GET"])
 @cross_origin()
 def search(name, password, cmd):
-    if name in memusers:
-        if password == memusers[name]["password"]:
-            if cmd in memusers[name]["bookmarks"]:
-                new_url = "http://" + memusers[name]["bookmarks"][cmd]
-                return redirect(new_url)
-            else:
-                new_url = f"http://www.google.com/search?q={cmd}"
-                return redirect(new_url)
-        else:
-            return jsonify({"error": "incorrect password"})
+    user_cmd = all_cmd(name, password)
+    if user_cmd == None:
+        return jsonify(
+            {"error": "could not return find bookmarks for given name and password"}
+        )
+    if cmd in user_cmd:
+        url = user_cmd[cmd]
+        new_url = f"http://{url}"
+        return redirect(new_url)
     else:
-        return jsonify({"error": "incorrect username"})
+        new_url = f"http://www.google.com/search?q={cmd}"
+        return redirect(new_url)
