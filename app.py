@@ -1,0 +1,100 @@
+from flask import Flask, jsonify, make_response, redirect, request
+from flask_cors import CORS, cross_origin
+
+app = Flask(__name__)
+CORS(app)
+
+memusers = {}
+
+
+@app.route("/")
+@cross_origin()
+def hello_world():
+    return redirect("http://www.github.com/conalli/bookshelf-client")
+
+
+@app.route("/signup", methods=["POST"])
+@cross_origin()
+def sign_up():
+    name = password = ""
+    req = request.get_json()
+    if len(req["name"]) < 3:
+        return jsonify({"error": "username input: please use atleast 6 characters"})
+    if req["name"] in memusers:
+        return jsonify({"error": "username input: username already exists"})
+    else:
+        name = req["name"]
+    if len(req["password"]) < 3:
+        return jsonify({"error": "use password length greater than 3"})
+    else:
+        password = req["password"]
+    memusers[name] = {"password": password, "bookmarks": {}}
+    resp = {}
+    resp["name"] = name
+    resp["password"] = password
+    return jsonify(resp), 200
+
+
+@app.route("/login", methods=["POST"])
+@cross_origin()
+def log_in():
+    req = request.get_json()
+    name = req["name"]
+    password = req["password"]
+    if name in memusers:
+        if password == memusers[name]["password"]:
+            return jsonify({"login": True}), 200
+        else:
+            return jsonify({"login": False}), 404
+    else:
+        return jsonify({"login": False}), 404
+
+
+@app.route("/setcmd", methods=["POST"])
+@cross_origin()
+def set_cmd():
+    name = password = cmd = url = ""
+    req = request.get_json()
+    if ("name" and "password" and "cmd" and "url") in req:
+        name = req["name"]
+        password = req["password"]
+        cmd = req["cmd"]
+        url = req["url"]
+        if name in memusers and memusers[name]["password"] == password:
+            memusers[name]["bookmarks"][cmd] = url
+            return jsonify({"cmd": cmd, "url": url}), 200
+        else:
+            return jsonify({"error": "could not set command"}), 404
+    else:
+        return jsonify({"error": "what just happened"}), 404
+
+
+@app.route("/getcmd", methods=["GET"])
+@cross_origin()
+def get_cmd():
+    name = password = ""
+    req = request.get_json()
+    name = req["name"]
+    password = req["password"]
+    if name in memusers and memusers[name]["password"] == password:
+        return jsonify(memusers[name]["bookmarks"])
+    else:
+        error = f"could not get commands for user -> {req[name]}"
+        return jsonify({"error": error})
+
+
+@app.route("/search/<name>/<password>/<cmd>", methods=["GET"])
+@cross_origin()
+def search(name, password, cmd):
+    if name in memusers:
+        if password == memusers[name]["password"]:
+            if cmd in memusers[name]["bookmarks"]:
+                new_url = "http://" + memusers[name]["bookmarks"][cmd]
+                return redirect(new_url)
+            else:
+                new_url = f"http://www.google.com/search?q={cmd}"
+                return redirect(new_url)
+        else:
+            return jsonify({"error": "incorrect password"})
+    else:
+        return jsonify({"error": "incorrect username"})
