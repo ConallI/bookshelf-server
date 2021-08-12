@@ -32,3 +32,8 @@ def add_cmd(name, password, cmd, url):
         {"name": name, "password": password}, {"$set": {f"bookmarks.{cmd}": url}}
     )
     return new_cmd.modified_count
+
+
+def all_cmd(name, password):
+    user = db.users.find_one({"name": name, "password": password})
+    return user["bookmarks"]

@@ -74,12 +74,13 @@ def set_cmd():
 @app.route("/getcmd", methods=["GET"])
 @cross_origin()
 def get_cmd():
-    name = password = ""
     req = request.get_json()
     name = req["name"]
     password = req["password"]
-    if name in memusers and memusers[name]["password"] == password:
-        return jsonify(memusers[name]["bookmarks"])
+    all_cmds = all_cmd(name, password)
+    print(all_cmds)
+    if all_cmds is not None:
+        return jsonify(all_cmds), 200
     else:
         error = f"could not get commands for user -> {req[name]}"
         return jsonify({"error": error})
