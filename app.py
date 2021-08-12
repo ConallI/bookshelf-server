@@ -45,7 +45,6 @@ def log_in():
     name = req["name"]
     password = req["password"]
     user = get_user_by_name_and_password(name, password)
-    print(user)
     if user is not None:
         return jsonify({"login": True}), 200
     else:
@@ -55,20 +54,21 @@ def log_in():
 @app.route("/setcmd", methods=["POST"])
 @cross_origin()
 def set_cmd():
-    name = password = cmd = url = ""
     req = request.get_json()
-    if ("name" and "password" and "cmd" and "url") in req:
-        name = req["name"]
-        password = req["password"]
-        cmd = req["cmd"]
-        url = req["url"]
-        if name in memusers and memusers[name]["password"] == password:
-            memusers[name]["bookmarks"][cmd] = url
-            return jsonify({"cmd": cmd, "url": url}), 200
+    name = req["name"]
+    password = req["password"]
+    cmd = req["cmd"]
+    url = req["url"]
+    user = get_user_by_name_and_password(name, password)
+    print(user)
+    if user is not None:
+        new_cmd = add_cmd(name, password, cmd, url)
+        if new_cmd is not None:
+            return jsonify({"new_cmds": new_cmd}), 200
         else:
             return jsonify({"error": "could not set command"}), 404
     else:
-        return jsonify({"error": "what just happened"}), 404
+        return jsonify({"error": "could not find user"}), 404
 
 
 @app.route("/getcmd", methods=["GET"])

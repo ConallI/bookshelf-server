@@ -17,7 +17,6 @@ def get_user_by_name_and_password(name, password):
 
 
 def add_user(name, password):
-
     ret = get_user_by_name(name)
 
     if ret is None:
@@ -26,3 +25,10 @@ def add_user(name, password):
         ret = x.inserted_id
 
     return str(ret)
+
+
+def add_cmd(name, password, cmd, url):
+    new_cmd = db.users.update_one(
+        {"name": name, "password": password}, {"$set": {f"bookmarks.{cmd}": url}}
+    )
+    return new_cmd.modified_count
