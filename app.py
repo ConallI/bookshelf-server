@@ -44,11 +44,10 @@ def log_in():
     req = request.get_json()
     name = req["name"]
     password = req["password"]
-    if name in memusers:
-        if password == memusers[name]["password"]:
-            return jsonify({"login": True}), 200
-        else:
-            return jsonify({"login": False}), 404
+    user = get_user_by_name_and_password(name, password)
+    print(user)
+    if user is not None:
+        return jsonify({"login": True}), 200
     else:
         return jsonify({"login": False}), 404
 

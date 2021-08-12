@@ -12,6 +12,10 @@ def get_user_by_name(name):
     return db.users.find_one({"name": name})
 
 
+def get_user_by_name_and_password(name, password):
+    return db.users.find_one({"name": name, "password": password})
+
+
 def add_user(name, password):
 
     ret = get_user_by_name(name)
