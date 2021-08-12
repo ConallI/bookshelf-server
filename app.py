@@ -6,8 +6,6 @@ from db.db import *
 app = Flask(__name__)
 CORS(app)
 
-memusers = {}
-
 
 @app.route("/")
 @cross_origin()
@@ -18,7 +16,6 @@ def hello_world():
 @app.route("/signup", methods=["POST"])
 @cross_origin()
 def sign_up():
-    name = password = ""
     req = request.get_json()
     if len(req["name"]) < 3:
         return jsonify({"error": "username input: please use atleast 6 characters"})
@@ -33,7 +30,6 @@ def sign_up():
         password = req["password"]
     id = add_user(name, password)
 
-    # memusers[name] = {"password": password, "bookmarks": {}}
     resp = {"name": name, "password": password, "id": id}
     return jsonify(resp), 200
 

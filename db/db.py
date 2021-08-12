@@ -1,5 +1,4 @@
 from pymongo import MongoClient
-
 from config.config import *
 
 client = MongoClient(
@@ -18,7 +17,6 @@ def get_user_by_name_and_password(name, password):
 
 def add_user(name, password):
     ret = get_user_by_name(name)
-
     if ret is None:
         new_user = {"name": name, "password": password, "bookmarks": {}}
         x = db.users.insert_one(new_user)
