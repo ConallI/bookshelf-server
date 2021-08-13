@@ -28,10 +28,9 @@ def sign_up():
         return jsonify({"error": "use password length greater than 3"})
     else:
         password = req["password"]
-    id = add_user(name, password)
-
-    resp = {"name": name, "password": password, "id": id}
-    return jsonify(resp), 200
+    new_user = add_user(name, password)
+    new_user["_id"] = str(new_user["_id"])
+    return jsonify(new_user), 200
 
 
 @app.route("/login", methods=["POST"])
@@ -51,14 +50,13 @@ def log_in():
 @cross_origin()
 def set_cmd():
     req = request.get_json()
-    name = req["name"]
-    password = req["password"]
+    api_key = req["apiKey"]
     cmd = req["cmd"]
     url = req["url"]
-    user = get_user_by_name_and_password(name, password)
+    user = get_user_by_name_and_password(api_key)
     print(user)
     if user is not None:
-        new_cmd = add_cmd(name, password, cmd, url)
+        new_cmd = add_cmd(api_key, cmd, url)
         if new_cmd is not None:
             return jsonify({"new_cmds": new_cmd}), 200
         else:
@@ -82,10 +80,10 @@ def get_cmd():
         return jsonify({"error": error})
 
 
-@app.route("/search/<name>/<password>/<cmd>", methods=["GET"])
+@app.route("/search/<api_key>/<cmd>", methods=["GET"])
 @cross_origin()
-def search(name, password, cmd):
-    user_cmd = all_cmd(name, password)
+def search(api_key, cmd):
+    user_cmd = all_cmd(api_key)
     if user_cmd == None:
         return jsonify(
             {"error": "could not return find bookmarks for given name and password"}

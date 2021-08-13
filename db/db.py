@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-
+import random
 from config.config import *
 
 client = MongoClient(
@@ -18,21 +18,32 @@ def get_user_by_name_and_password(name, password):
 
 def add_user(name, password):
     ret = get_user_by_name(name)
+    key = list("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFHJKLZXCVBNM1234567890")
+    random.shuffle(key)
+    api_key = "".join(key)
     if ret is None:
-        new_user = {"name": name, "password": password, "bookmarks": {}}
+        new_user = {
+            "name": name,
+            "password": password,
+            "bookmarks": {},
+            "apiKey": api_key,
+        }
         x = db.users.insert_one(new_user)
-        ret = x.inserted_id
+        ret = get_user_by_name_and_password(name, password)
 
-    return str(ret)
+    return ret
 
 
-def add_cmd(name, password, cmd, url):
-    new_cmd = db.users.update_one(
-        {"name": name, "password": password}, {"$set": {f"bookmarks.{cmd}": url}}
-    )
+def all_cmd(key):
+    user = db.users.find_one({"apiKey": key})
+    return user["bookmarks"]
+
+
+def add_cmd(key, cmd, url):
+    new_cmd = db.users.update_one({"key": key}, {"$set": {f"bookmarks.{cmd}": url}})
     return new_cmd.modified_count
 
 
-def all_cmd(name, password):
-    user = db.users.find_one({"name": name, "password": password})
-    return user["bookmarks"]
+def del_cmd(key, cmd):
+    new_cmd = db.users.update_one({"key": key}, {"$unset": {f"bookmarks.{cmd}"}})
+    return new_cmd.modified_count
