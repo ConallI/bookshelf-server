@@ -16,6 +16,10 @@ def get_user_by_name_and_password(name, password):
     return db.users.find_one({"name": name, "password": password})
 
 
+def get_user_by_apiKey(api_key):
+    return db.users.find_one({"apiKey": api_key})
+
+
 def add_user(name, password):
     ret = get_user_by_name(name)
     key = list("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFHJKLZXCVBNM1234567890")
@@ -40,10 +44,10 @@ def all_cmd(key):
 
 
 def add_cmd(key, cmd, url):
-    new_cmd = db.users.update_one({"key": key}, {"$set": {f"bookmarks.{cmd}": url}})
+    new_cmd = db.users.update_one({"apiKey": key}, {"$set": {f"bookmarks.{cmd}": url}})
     return new_cmd.modified_count
 
 
 def del_cmd(key, cmd):
-    new_cmd = db.users.update_one({"key": key}, {"$unset": {f"bookmarks.{cmd}"}})
+    new_cmd = db.users.update_one({"apiKey": key}, {"$unset": {f"bookmarks.{cmd}"}})
     return new_cmd.modified_count

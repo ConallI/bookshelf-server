@@ -53,7 +53,7 @@ def set_cmd():
     api_key = req["apiKey"]
     cmd = req["cmd"]
     url = req["url"]
-    user = get_user_by_name_and_password(api_key)
+    user = get_user_by_apiKey(api_key)
     print(user)
     if user is not None:
         new_cmd = add_cmd(api_key, cmd, url)
@@ -69,14 +69,12 @@ def set_cmd():
 @cross_origin()
 def get_cmd():
     req = request.get_json()
-    name = req["name"]
-    password = req["password"]
-    all_cmds = all_cmd(name, password)
-    print(all_cmds)
+    api_key = req["apiKey"]
+    all_cmds = all_cmd(api_key)
     if all_cmds is not None:
         return jsonify(all_cmds), 200
     else:
-        error = f"could not get commands for user -> {req[name]}"
+        error = f"could not get commands for user -> {req[api_key]}"
         return jsonify({"error": error})
 
 
