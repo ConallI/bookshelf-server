@@ -1,6 +1,6 @@
 from flask import Flask, jsonify, redirect, request
 from flask_cors import CORS, cross_origin
-
+import os
 from db.db import *
 
 app = Flask(__name__)
@@ -93,3 +93,15 @@ def search(api_key, cmd):
     else:
         new_url = f"http://www.google.com/search?q={cmd}"
         return redirect(new_url)
+
+
+def get_port():
+    """
+    Retrieves port for env variable
+    :return:
+    """
+    return int(os.environ.get("PORT", 5000))
+
+
+if __name__ == "__main__":
+    app.run(debug=True, port=get_port(), host="0.0.0.0")
