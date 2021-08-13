@@ -74,7 +74,7 @@ def get_cmd():
     if all_cmds is not None:
         return jsonify(all_cmds), 200
     else:
-        error = f"could not get commands for user -> {req[api_key]}"
+        error = f"could not get commands for key -> {req[api_key]}"
         return jsonify({"error": error})
 
 
@@ -83,9 +83,8 @@ def get_cmd():
 def search(api_key, cmd):
     user_cmd = all_cmd(api_key)
     if user_cmd == None:
-        return jsonify(
-            {"error": "could not return find bookmarks for given name and password"}
-        )
+        error = f"could not return find bookmarks for given key:{api_key}"
+        return jsonify({"error": error})
     if cmd in user_cmd:
         url = user_cmd[cmd]
         new_url = f"http://{url}"
