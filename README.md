@@ -1,4 +1,4 @@
-# bookshelf-server
+# Bookshelf - Server
 
 Server API for Bookshelf, smart bookmarking app.
 Written in:
@@ -59,3 +59,16 @@ All examples are taken from Google Chrome, however the setup is similar for most
   The final %s will be replaced by your bookmark command.
   
 <img width="425" alt="Screenshot 2021-08-22 at 19 32 34" src="https://user-images.githubusercontent.com/76471929/130351990-c1532434-b0d5-4d7b-8f48-7a850c6b5e43.png">
+
+  
+## Contributing to Bookshelf - Server
+  
+  - First fork and clone the repo.
+  
+  - Create a virtual environment in Python3.
+  
+  - Install dependencies using the requirements.txt file in the repo.
+  
+  - Check Github issues to make sure your change isn't already being worked on.
+  
+  - Make a new branch, write your code, and create a pull request with your changes (ideally citing a Github issue).
