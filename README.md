@@ -4,6 +4,7 @@ Server API for Bookshelf, smart bookmarking app.
 Written in:
 
 -Python :snake:
+
 -Flask :sake:
 
 ## Getting started with :book: Bookshelf :book:
@@ -51,7 +52,10 @@ All examples are taken from Google Chrome, however the setup is similar for most
 ### Step 4: Create the new search engine
 
 - Name is what you will see in the settings menu.
+
 - Keyword is what you will preface your bookmark command with, it tells the browser that you want to use Bookshelf.
-- Finally enter the URL as shown, https://bookshelf-server-api.herokuapp.com/search/<Your API key here>/%s. The final %s will be replaced by your bookmark command.
+
+- Finally enter the URL as shown, https://bookshelf-server-api.herokuapp.com/search/<Your API key here>/%s. 
+  The final %s will be replaced by your bookmark command.
   
 <img width="425" alt="Screenshot 2021-08-22 at 19 32 34" src="https://user-images.githubusercontent.com/76471929/130351990-c1532434-b0d5-4d7b-8f48-7a850c6b5e43.png">
