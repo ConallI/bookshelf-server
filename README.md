@@ -65,9 +65,7 @@ All examples are taken from Google Chrome, however the setup is similar for most
   
   - First fork and clone the repo.
   
-  - Create a virtual environment in Python3.
-  
-  - Install dependencies using the requirements.txt file in the repo.
+  - Build and run the docker container using docker-compose.
   
   - Check Github issues to make sure your change isn't already being worked on.
   
